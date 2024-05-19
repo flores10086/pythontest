@@ -1,67 +1,101 @@
 import turtle as t
 import random
 
-def tree(deep,long):
-    if deep<1:
+# 常量定义
+INITIAL_DEPTH = 10  # 初始树的深度
+INITIAL_LENGTH = 75  # 初始树枝的长度
+BRANCH_ANGLE_MIN = 15  # 树枝分叉的最小角度
+BRANCH_ANGLE_MAX = 20  # 树枝分叉的最大角度
+LENGTH_DECREASE_MIN = 5  # 每层树枝长度减少的最小值
+LENGTH_DECREASE_MAX = 10  # 每层树枝长度减少的最大值
+DECORATION_RADIUS_MIN = 3  # 装饰点的最小半径
+DECORATION_RADIUS_MAX = 5  # 装饰点的最大半径
+DECORATION_COUNT = 15  # 每层树枝上的装饰点数量
+DECORATION_COLOR_R_MIN = 250  # 装饰点红色分量的最小值
+DECORATION_COLOR_R_MAX = 255  # 装饰点红色分量的最大值
+DECORATION_COLOR_G_MIN = 185  # 装饰点绿色分量的最小值
+DECORATION_COLOR_G_MAX = 195  # 装饰点绿色分量的最大值
+DECORATION_COLOR_B_MIN = 195  # 装饰点蓝色分量的最小值
+DECORATION_COLOR_B_MAX = 210  # 装饰点蓝色分量的最大值
+
+def draw_branch(deep, length):
+    """递归绘制树枝"""
+    if deep < 1:
         return
-    t.pd()
-    t.pensize(deep)
-    t.forward(long)
-    rd=random.randint(15,20)
-    ld=random.randint(15,20)
-    long1=random.randint(5,10)
-    if deep>0:
-        t.right(rd)
-        tree(deep-1,long-long1)
-        t.left(ld+rd)
-        tree(deep-1,long-long1)
-        t.right(ld)
-    if deep<6:
-        pos=t.pos()
-        # times=random.randint(10, 15)
 
+    t.pd()  # 放下画笔开始绘制
+    t.pensize(deep)  # 设置画笔的粗细
+    t.forward(length)  # 前进指定的长度
 
-        red = random.randint(250, 255)
-        green = random.randint(185, 195)
-        blue = random.randint(195, 210)
-        for i in range(15):
-            locx = random.randint(-25, 25)
-            locy = random.randint(-25, 25)
-            t.color(red,green,blue)
-            t.pu()
-            t.goto(t.xcor()+locx,t.ycor()+locy)
-            t.pd()
-            rd=random.randint(0,100)
-            r=random.randint(3,5)
-            if rd%2==0:
-                t.begin_fill()
-                t.circle(r)
-                t.end_fill()
-            else:
-                t.circle(5)
-        t.color('black')
-        t.pu()
-        t.setpos(pos)
-        t.pd()
-    t.backward(long)
+    if deep > 0:
+        rd = random.randint(BRANCH_ANGLE_MIN, BRANCH_ANGLE_MAX)  # 随机生成右转角度
+        ld = random.randint(BRANCH_ANGLE_MIN, BRANCH_ANGLE_MAX)  # 随机生成左转角度
+        length_decrease = random.randint(LENGTH_DECREASE_MIN, LENGTH_DECREASE_MAX)  # 随机生成减少的长度
 
+        t.right(rd)  # 右转指定角度
+        draw_branch(deep - 1, length - length_decrease)  # 递归调用生成右侧树枝
+        t.left(ld + rd)  # 左转回到主干方向再左转
+        draw_branch(deep - 1, length - length_decrease)  # 递归调用生成左侧树枝
+        t.right(ld)  # 右转回到主干方向
 
-t.hideturtle()
-t.colormode(255)
-t.bgcolor(240, 230, 230)
-t.ht()
-t.speed(0)
-t.tracer(0,0)
-t.pensize(16)
-t.pu()
-t.right(90)
-t.forward(500)
-t.pd()
-t.left(180)
-t.pd()
-t.forward(200)
-tree(10,75)
+    # 当树的深度小于6时，添加一些装饰点
+    if deep < 6:
+        add_decorations()
 
+    t.backward(length)  # 返回到初始位置
 
+    # 每次绘制粗树枝时更新画布
+    if deep >= 6:
+        t.update()
 
-t.done()
+def add_decorations():
+    """在树枝上添加装饰点"""
+    pos = t.pos()  # 记录当前位置
+    red = random.randint(DECORATION_COLOR_R_MIN, DECORATION_COLOR_R_MAX)
+    green = random.randint(DECORATION_COLOR_G_MIN, DECORATION_COLOR_G_MAX)
+    blue = random.randint(DECORATION_COLOR_B_MIN, DECORATION_COLOR_B_MAX)
+
+    for _ in range(DECORATION_COUNT):
+        locx = random.randint(-25, 25)
+        locy = random.randint(-25, 25)
+        t.color(red, green, blue)  # 设置装饰点颜色
+        t.pu()  # 抬起画笔移动到新位置
+        t.goto(t.xcor() + locx, t.ycor() + locy)  # 移动到随机位置
+        t.pd()  # 放下画笔开始绘制
+        if random.randint(0, 100) % 2 == 0:  # 随机选择填充圆或空心圆
+            t.begin_fill()
+            t.circle(random.randint(DECORATION_RADIUS_MIN, DECORATION_RADIUS_MAX))
+            t.end_fill()
+        else:
+            t.circle(5)
+
+    t.color('black')  # 恢复画笔颜色为黑色
+    t.pu()  # 抬起画笔
+    t.setpos(pos)  # 返回到原位置
+    t.pd()  # 放下画笔
+
+def setup_turtle():
+    """初始化海龟画布和画笔"""
+    t.hideturtle()  # 隐藏海龟形状
+    t.colormode(255)  # 设置颜色模式为RGB
+    t.bgcolor(240, 230, 230)  # 设置背景颜色
+    t.ht()  # 隐藏海龟
+    t.speed(0)  # 设置绘制速度为最快
+    t.tracer(0, 0)  # 关闭自动更新画布，手动更新
+    t.pensize(16)  # 设置初始画笔粗细
+    t.pu()  # 抬起画笔
+    t.right(90)  # 右转90度
+    t.forward(500)  # 前进500个单位
+    t.pd()  # 放下画笔
+    t.left(180)  # 左转180度
+    t.pd()  # 放下画笔
+    t.forward(200)  # 前进200个单位
+
+def main():
+    """主函数"""
+    setup_turtle()  # 初始化画布和画笔
+    draw_branch(INITIAL_DEPTH, INITIAL_LENGTH)  # 绘制树枝
+    t.done()  # 完成绘制
+
+if __name__ == "__main__":
+    main()
