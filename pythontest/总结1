@@ -1,0 +1,7 @@
+a =1
+print(type(a))
+
+while True:
+    content = input("asdf")
+    print(type(content))
+    #print(content)

@@ -1,0 +1,25 @@
+"ddsdfsfasdfasdf"
+'asdf'
+'''asdfasfd'''
+"""aasdf"""
+
+#运算符
+print("asd"+"a")
+print("asd "*6)
+  
+#函数
+print( ord("A") )#ASCII
+
+a="abc BDf".lower()
+print( a )
+
+#首字母大写       capitalize()
+#单词首字母大写   title()
+#字母全部大写     upper()
+#字母全部小写     lower()
+#大小写反转       swapcase()
+
+#分割 split()
+#连接 join()
+
+

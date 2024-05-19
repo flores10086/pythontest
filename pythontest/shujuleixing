@@ -1,0 +1,29 @@
+a=1
+b=2;
+c=a+b
+print(c)
+中国=1
+print(中国)
+
+
+
+
+bin=bin(100)#二进制
+print(bin)
+bin=0b1100100
+print(bin)
+
+oct=oct(100)#八进制
+hex=hex(100)#十六进制
+
+print(1.0 == 1)#true
+print(1.0 is 1)#false
+
+#运算  + - * /    幂运算**   地板除//
+print(3**3)
+print(10//3)
+print(-10//3)
+
+
+
+100*2
